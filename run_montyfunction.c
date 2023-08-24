@@ -1,9 +1,6 @@
 #include "monty.h"
 #include <string.h>
 
-/* Declare getline function */
-ssize_t getline(char **lineptr, size_t *n, FILE *stream);
-
 void free_tokens(void);
 unsigned int token_arr_len(void);
 int is_empty_line(char *line, char *delims);
@@ -33,11 +30,11 @@ void free_tokens(void)
  */
 unsigned int token_arr_len(void)
 {
-    unsigned int toks_len = 0;
+	unsigned int toks_len = 0;
 
-    while (op_toks[toks_len])
-        toks_len++;
-    return (toks_len);
+	while (op_toks[toks_len])
+		toks_len++;
+	return (toks_len);
 }
 
 /**
@@ -114,20 +111,21 @@ void (*get_op_func(char *opcode))(stack_t**, unsigned int)
 int run_monty(FILE *script_fd)
 {
     stack_t *stack = NULL;
-    char *line = NULL;
-    size_t len = 0, exit_status = EXIT_SUCCESS;
+    char line[256];  /* Assuming a maximum line length of 255 characters */
+    size_t len, exit_status = EXIT_SUCCESS;
     unsigned int line_number = 0, prev_tok_len = 0;
     void (*op_func)(stack_t**, unsigned int);
 
     if (init_stack(&stack) == EXIT_FAILURE)
         return (EXIT_FAILURE);
 
-    /* Declare getline function */
-    ssize_t getline(char **lineptr, size_t *n, FILE *stream);
-
-    while (getline(&line, &len, script_fd) != -1)
+    while (fgets(line, sizeof(line), script_fd) != NULL)
     {
         line_number++;
+        len = strlen(line);
+        if (len > 0 && line[len - 1] == '\n')
+            line[len - 1] = '\0'; /* Remove the newline character */
+        
         op_toks = strtow(line, DELIMS);
         if (op_toks == NULL)
         {
@@ -170,6 +168,7 @@ int run_monty(FILE *script_fd)
         return (malloc_error());
     }
 
-    free(line);
+    /* No need to free 'line' since it's an array, not dynamically allocated */
+
     return (exit_status);
 }
