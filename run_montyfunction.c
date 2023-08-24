@@ -12,15 +12,15 @@ int run_monty(FILE *script_fd);
  */
 void free_tokens(void)
 {
-    size_t i = 0;
+	size_t i = 0;
 
-    if (op_toks == NULL)
-        return;
+	if (op_toks == NULL)
+		return;
 
-    for (i = 0; op_toks[i]; i++)
-        free(op_toks[i]);
+	for (i = 0; op_toks[i]; i++)
+		free(op_toks[i]);
 
-    free(op_toks);
+	free(op_toks);
 }
 
 /**
@@ -102,6 +102,7 @@ void (*get_op_func(char *opcode))(stack_t**, unsigned int)
 	return (NULL);
 }
 
+
 /**
  * run_monty - Primary function to execute a Monty bytecodes script.
  * @script_fd: File descriptor for an open Monty bytecodes script.
@@ -161,14 +162,6 @@ int run_monty(FILE *script_fd)
         free_tokens();
     }
     free_stack(&stack);
-
-    if (line && *line == 0)
-    {
-        free(line);
-        return (malloc_error());
-    }
-
-    /* No need to free 'line' since it's an array, not dynamically allocated */
 
     return (exit_status);
 }
